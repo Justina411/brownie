@@ -30,67 +30,70 @@ const aboutData = [
 const About = () => {
   return (
     <>
-    <div className="bg-[#f5f5f5] min-h-screen py-16 px-8">
-      <h1 className="text-4xl font-serif text-center mb-12">About Brownie</h1>
+      {/* Added responsive padding px-4 for mobile, px-8 for desktop */}
+      <div className="bg-[#f5f5f5] min-h-screen py-16 px-4 md:px-8 pt-30">
+        {/* Adjusted text size for mobile */}
+        <h1 className="text-3xl md:text-4xl font-serif text-center mb-12">About Brownie</h1>
 
-      <div className="flex flex-col gap-12">
-        {aboutData.map((item, index) => (
-          <div
-            key={index}
-            className={`grid gap-6 items-center md:grid-cols-3 ${
-              index % 2 !== 0 ? "md:grid-flow-col-dense" : ""
-            }`}
-          >
-            {/* Images */}
-            {index % 2 === 0 ? (
-              <>
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="w-full object-cover rounded-xl shadow-md"
-                />
-                <img
-                  src={item.img2}
-                  alt={item.title}
-                  className="w-full object-cover rounded-xl shadow-md"
-                />
-                {/* Text Box on right */}
-                <div className="bg-white p-6 rounded-xl shadow-md flex flex-col justify-center max-w-md">
-                  <h2 className="text-2xl font-semibold mb-4">{item.title}</h2>
-                  <p className="text-gray-700">{item.text}</p>
-                  <button className="mt-6 bg-amber-700 text-white px-6 py-2 rounded-lg hover:bg-amber-800 w-32">
-                    Shop Now
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                {/* Text Box on left */}
-                <div className="bg-white p-6 rounded-xl shadow-md flex flex-col justify-center max-w-md">
-                  <h2 className="text-2xl font-semibold mb-4">{item.title}</h2>
-                  <p className="text-gray-700">{item.text}</p>
-                  <button className="mt-6 bg-amber-700 text-white px-6 py-2 rounded-lg hover:bg-amber-800 w-32">
-                    Shop Now
-                  </button>
-                </div>
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="w-full object-cover rounded-xl shadow-md"
-                />
-                <img
-                  src={item.img2}
-                  alt={item.title}
-                  className="w-full object-cover rounded-xl shadow-md"
-                />
-              </>
-            )}
-          </div>
-        ))}
+        <div className="flex flex-col gap-12">
+          {aboutData.map((item, index) => (
+            <div
+              key={index}
+              /* Changed to grid-cols-1 by default (mobile) and md:grid-cols-3 for desktop */
+              className={`grid grid-cols-1 md:grid-cols-3 gap-6 items-center ${
+                index % 2 !== 0 ? "md:grid-flow-col-dense" : ""
+              }`}
+            >
+              {/* Images */}
+              {index % 2 === 0 ? (
+                <>
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="w-full object-cover rounded-xl shadow-md"
+                  />
+                  <img
+                    src={item.img2}
+                    alt={item.title}
+                    className="w-full object-cover rounded-xl shadow-md"
+                  />
+                  {/* Text Box - max-w-md now centers on mobile with mx-auto */}
+                  <div className="bg-white p-6 rounded-xl shadow-md flex flex-col justify-center mx-auto md:mx-0 max-w-md w-full">
+                    <h2 className="text-2xl font-semibold mb-4">{item.title}</h2>
+                    <p className="text-gray-700">{item.text}</p>
+                    <button className="mt-6 bg-amber-700 text-white px-6 py-2 rounded-lg hover:bg-amber-800 w-32">
+                      Shop Now
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Text Box - order-last on mobile keeps text below images, md:order-first resets it */}
+                  <div className="bg-white p-6 rounded-xl shadow-md flex flex-col justify-center mx-auto md:mx-0 max-w-md w-full order-last md:order-none">
+                    <h2 className="text-2xl font-semibold mb-4">{item.title}</h2>
+                    <p className="text-gray-700">{item.text}</p>
+                    <button className="mt-6 bg-amber-700 text-white px-6 py-2 rounded-lg hover:bg-amber-800 w-32">
+                      Shop Now
+                    </button>
+                  </div>
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="w-full object-cover rounded-xl shadow-md"
+                  />
+                  <img
+                    src={item.img2}
+                    alt={item.title}
+                    className="w-full object-cover rounded-xl shadow-md"
+                  />
+                </>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
 
-    <div className="bg-[#e6ded3] h-12 overflow-hidden flex items-center">
+      <div className="bg-[#e6ded3] h-12 overflow-hidden flex items-center">
         <div
           className="flex gap-16 whitespace-nowrap"
           style={{
@@ -119,7 +122,7 @@ const About = () => {
           }
         `}
       </style>
-      </>
+    </>
   );
 };
 

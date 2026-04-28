@@ -74,7 +74,7 @@ const Shop = () => {
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         <div className="bg-[#f6f6f6] rounded-[40px] p-10 flex justify-center items-center">
-            <img src={image} alt={name} className="max-h-[500px] object-contain" />
+            <img src={image} alt={name} className="max-h-125 object-contain" />
         </div>
         <div className="flex flex-col pt-4">
           <h1 className="text-5xl font-black mb-4 uppercase tracking-tighter">{name}</h1>

@@ -69,7 +69,7 @@ const About = () => {
               ) : (
                 <>
                   {/* Text Box - order-last on mobile keeps text below images, md:order-first resets it */}
-                  <div className="bg-white p-6 rounded-xl shadow-md flex flex-col justify-center mx-auto md:mx-0 max-w-md w-full order-last md:order-none">
+                  <div className="bg-white p-6 rounded-xl shadow-md flex flex-col justify-center mx-auto md:mx-0 max-w-md w-full order-last md:order-0">
                     <h2 className="text-2xl font-semibold mb-4">{item.title}</h2>
                     <p className="text-gray-700">{item.text}</p>
                     <button className="mt-6 bg-amber-700 text-white px-6 py-2 rounded-lg hover:bg-amber-800 w-32">

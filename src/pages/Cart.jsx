@@ -85,7 +85,7 @@ const Cart = () => {
             >
               B
             </div>
-            <div className="h-6 w-[1px] bg-zinc-300"></div>
+            <div className="h-6 w-px bg-zinc-300"></div>
             <h1 className="text-xl font-bold uppercase tracking-tight text-zinc-500">
               Your Shopping Cart
             </h1>
@@ -188,7 +188,7 @@ const Cart = () => {
           Card Details
         </h2>
 
-        <div className="space-y-12 flex-grow">
+        <div className="space-y-12 grow">
           <div className="flex gap-8 items-center text-5xl">
             <RiMastercardFill className="text-[#eb001b]" />
             <RiVisaLine className="text-[#1a1f71] bg-white rounded-md px-1" />

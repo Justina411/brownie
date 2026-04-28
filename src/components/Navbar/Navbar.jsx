@@ -38,7 +38,7 @@ const Navbar = () => {
     <>
       <div className="h-20"></div>
 
-      <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-6 bg-white shadow-sm z-[100]">
+      <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-6 bg-white shadow-sm z-100">
         <h1 className="text-2xl font-bold uppercase tracking-tighter text-[#1a0f0d]">
           Brownie
         </h1>
@@ -104,7 +104,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="fixed top-0 left-0 w-full h-screen bg-white z-[110] flex flex-col items-center justify-center gap-8">
+          <div className="fixed top-0 left-0 w-full h-screen bg-white z-110 flex flex-col items-center justify-center gap-8">
             <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 text-3xl text-amber-800">
               <HiX />
             </button>

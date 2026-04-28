@@ -4,7 +4,7 @@ import homebg from "../../public/Homebg.jpg"; // <-- fixed path
 const Home = () => {
   return (
     <section
-      className="relative min-h-[460px] flex items-center bg-cover bg-center"
+      className="relative min-h-115 flex items-center bg-cover bg-center"
       style={{ backgroundImage: `url(${homebg})` }}
     >
       <div className="absolute inset-0 bg-amber-900/70"></div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import homebg from "../assets/Homebg.jpg"; // <-- fixed path
+import homebg from "../../public/Homebg.jpg"; // <-- fixed path
 
 const Home = () => {
   return (

@@ -3,22 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { AiFillHeart } from "react-icons/ai";
 
 // Import all 16 bag images
-import bag1 from "../assets/bag1.jpg";
-import bag2 from "../assets/bag2.jpg";
-import bag3 from "../assets/bag3.jpg";
-import bag4 from "../assets/bag4.jpg";
-import bag5 from "../assets/bag5.jpg";
-import bag6 from "../assets/bag6.jpg";
-import bag7 from "../assets/bag7.jpg";
-import bag8 from "../assets/bag8.jpg";
-import bag9 from "../assets/bag9.jpg";
-import bag10 from "../assets/bag10.jpg";
-import bag11 from "../assets/bag11.jpg";
-import bag12 from "../assets/bag12.jpg";
-import bag13 from "../assets/bag13.jpg";
-import bag14 from "../assets/bag14.jpg";
-import bag15 from "../assets/bag15.jpg";
-import bag16 from "../assets/bag16.jpg";
+import bag1 from "../../public/bag1.jpg";
+import bag2 from "../../public/bag2.jpg";
+import bag3 from "../../public/bag3.jpg";
+import bag4 from "../../public/bag4.jpg";
+import bag5 from "../../public/bag5.jpg";
+import bag6 from "../../public/bag6.jpg";
+import bag7 from "../../public/bag7.jpg";
+import bag8 from "../../public/bag8.jpg";
+import bag9 from "../../public/bag9.jpg";
+import bag10 from "../../public/bag10.jpg";
+import bag11 from "../../public/bag11.jpg";
+import bag12 from "../../public/bag12.jpg";
+import bag13 from "../../public/bag13.jpg";
+import bag14 from "../../public/bag14.jpg";
+import bag15 from "../../public/bag15.jpg";
+import bag16 from "../../public/bag16.jpg";
 
 const images = [
   bag1, bag2, bag3, bag4, bag5,

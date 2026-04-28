@@ -1,10 +1,10 @@
 import React from "react";
-import model1 from "../assets/model1.jpg";
-import model2 from "../assets/model2.jpg";
-import model3 from "../assets/model3.jpg";
-import model4 from "../assets/model4.jpg";
-import model5 from "../assets/model5.jpg";
-import model6 from "../assets/model6.jpg";
+import model1 from "../../public/public/model1.jpg";
+import model2 from "../../public/model2.jpg";
+import model3 from "../../public/model3.jpg";
+import model4 from "../../public/model4.jpg";
+import model5 from "../../public/model5.jpg";
+import model6 from "../../public/model6.jpg";
 
 const aboutData = [
   {

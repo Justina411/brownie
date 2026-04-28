@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaShoppingBag, FaArrowLeft, FaShoppingCart } from 'react-icons/fa';
-import defaultBag from "../assets/bag1.jpg";
+import defaultBag from "../../public/bag1.jpg";
 
 const Shop = () => {
   const location = useLocation();

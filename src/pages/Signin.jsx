@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import bag from "../assets/modelbg.png";
+import bag from "../../public/modelbg.png";
 
 const Signin = () => {
   const navigate = useNavigate();

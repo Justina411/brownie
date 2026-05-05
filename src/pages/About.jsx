@@ -1,5 +1,5 @@
 import React from "react";
-import model1 from "/public/public/model1.jpg";
+import model1 from "/public//model1.jpg";
 import model2 from "/public/model2.jpg";
 import model3 from "/public/model3.jpg";
 import model4 from "/public/model4.jpg";

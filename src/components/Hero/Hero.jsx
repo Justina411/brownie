@@ -1,28 +1,28 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; 
-import background from "../../assets/background.jpg";
-import shipping from "../../assets/shipping.png";
-import exclusive from "../../assets/Exclusive.png";
-import packaging from "../../assets/packaging.png"; 
-import quality from "../../assets/quality.png";
-import model from "../../assets/model.jpg";
-import bags from "../../assets/bags.jpg";
-import bag1 from "../../assets/bag1.jpg";
-import bag2 from "../../assets/bag2.jpg";
-import bag3 from "../../assets/bag3.jpg";
-import bag4 from "../../assets/bag4.jpg";
-import bag5 from "../../assets/bag5.jpg";
-import bag6 from "../../assets/bag6.jpg";
-import bag7 from "../../assets/bag7.jpg";
-import bag8 from "../../assets/bag8.jpg";
-import bag9 from "../../assets/bag9.jpg";
-import bag10 from "../../assets/bag10.jpg";
-import bag11 from "../../assets/bag11.jpg";
-import bag12 from "../../assets/bag12.jpg";
-import bag13 from "../../assets/bag13.jpg";
-import bag14 from "../../assets/bag14.jpg";
-import bag15 from "../../assets/bag15.jpg";
-import video from "../../assets/Bag video.mp4";
+import background from "../../public/background.jpg";
+import shipping from "../../public/shipping.png";
+import exclusive from "../../public/Exclusive.png";
+import packaging from "../../public/packaging.png"; 
+import quality from "../../public/quality.png";
+import model from "../../public/model.jpg";
+import bags from "../../public/bags.jpg";
+import bag1 from "../../public/bag1.jpg";
+import bag2 from "../../public/bag2.jpg";
+import bag3 from "../../public/bag3.jpg";
+import bag4 from "../../public/bag4.jpg";
+import bag5 from "../../public/bag5.jpg";
+import bag6 from "../../public/bag6.jpg";
+import bag7 from "../../public/bag7.jpg";
+import bag8 from "../../public/bag8.jpg";
+import bag9 from "../../public/bag9.jpg";
+import bag10 from "../../public/bag10.jpg";
+import bag11 from "../../public/bag11.jpg";
+import bag12 from "../../public/bag12.jpg";
+import bag13 from "../../public/bag13.jpg";
+import bag14 from "../../public/bag14.jpg";
+import bag15 from "../../public/bag15.jpg";
+import video from "../../public/Bag video.mp4";
 
 const baggs = [
   { img: bag1, name: "Luxury Bag", price: "$24.00" },
@@ -71,7 +71,7 @@ const Hero = () => {
     <>
       {/* HERO SECTION */}
       <section
-        className="relative min-h-[460px] flex items-center bg-cover bg-center"
+        className="relative min-h-115 flex items-center bg-cover bg-center"
         style={{ backgroundImage: `url(${background})` }}
       >
         <div className="absolute inset-0 bg-amber-900/70 pointer-events-none"></div>
@@ -98,7 +98,7 @@ const Hero = () => {
             { img: packaging, title: "Good Packaging", text: "We make sure your luxury bag is well packaged" },
             { img: quality, title: "Highest Quality", text: "We offer quality bags to our customers" }
           ].map((item, i) => (
-            <div key={i} className="bg-amber-700 w-full sm:w-60 h-[200px] p-4 rounded-lg flex flex-col items-center text-center">
+            <div key={i} className="bg-amber-700 w-full sm:w-60 h-50 p-4 rounded-lg flex flex-col items-center text-center">
               <div
                 className="bg-white rounded-tl-2xl w-20 h-20 bg-center bg-contain bg-no-repeat mb-4"
                 style={{ backgroundImage: `url(${item.img})` }}
@@ -160,7 +160,7 @@ const Hero = () => {
 
       {/* VIDEO SECTION */}
       <section className="bg-[#f5efe7] px-6 md:px-16 py-10 md:py-14 flex flex-col md:flex-row items-center justify-between gap-10">
-        <div className="w-full md:w-[480px] h-[200px] md:h-[280px] rounded-xl overflow-hidden shadow-lg">
+        <div className="w-full md:w-120 h-50 md:h-70 rounded-xl overflow-hidden shadow-lg">
           <video src={video} autoPlay loop muted className="w-full h-full object-cover" />
         </div>
         <div className="flex flex-col items-center text-center md:ml-12">

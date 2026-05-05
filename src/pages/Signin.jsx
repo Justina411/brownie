@@ -26,14 +26,31 @@ const Signin = () => {
     setInputCode("");
   };
 
+  // ✅ GET ALL USERS
+  const getUsers = () => {
+    return JSON.parse(localStorage.getItem("users")) || [];
+  };
+
+  // ✅ SAVE USERS
+  const saveUsers = (users) => {
+    localStorage.setItem("users", JSON.stringify(users));
+  };
+
   // ✅ SEND RESET CODE
   const handleSendCode = (e) => {
     e.preventDefault();
 
-    const storedEmail = localStorage.getItem("userEmail");
+    const users = getUsers();
 
-    if (email === storedEmail) {
-      const code = Math.floor(1000 + Math.random() * 9000).toString();
+    const foundUser = users.find(
+      (user) => user.email === email
+    );
+
+    if (foundUser) {
+
+      const code = Math.floor(
+        1000 + Math.random() * 9000
+      ).toString();
 
       setGeneratedCode(code);
 
@@ -43,6 +60,7 @@ const Signin = () => {
       setIsForgot(false);
 
     } else {
+
       alert("Email not found. Please sign up first!");
 
       setIsForgot(false);
@@ -52,14 +70,17 @@ const Signin = () => {
     }
   };
 
-  // ✅ VERIFY RESET CODE
+  // ✅ VERIFY CODE
   const handleVerifyCode = (e) => {
     e.preventDefault();
 
     if (inputCode === generatedCode) {
+
       setIsVerifying(false);
       setIsResetting(true);
+
     } else {
+
       alert("Invalid code. Please try again.");
     }
   };
@@ -68,7 +89,15 @@ const Signin = () => {
   const handleSaveNewPassword = (e) => {
     e.preventDefault();
 
-    localStorage.setItem("userPassword", newPassword);
+    const users = getUsers();
+
+    const updatedUsers = users.map((user) =>
+      user.email === email
+        ? { ...user, password: newPassword }
+        : user
+    );
+
+    saveUsers(updatedUsers);
 
     alert("Password updated successfully! Please login.");
 
@@ -82,16 +111,21 @@ const Signin = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const storedEmail = localStorage.getItem("userEmail");
-    const storedPassword = localStorage.getItem("userPassword");
-    const storedName = localStorage.getItem("userName");
+    const users = getUsers();
 
     // ================= LOGIN =================
     if (isLogin) {
 
-      // ❌ USER NEVER SIGNED UP
-      if (!storedEmail || !storedPassword) {
-        alert("No account found. Please sign up first!");
+      const foundUser = users.find(
+        (user) =>
+          user.email === email &&
+          user.password === password
+      );
+
+      // ❌ USER NOT FOUND
+      if (!foundUser) {
+
+        alert("Account not found. Please sign up first!");
 
         setIsLogin(false);
 
@@ -100,45 +134,47 @@ const Signin = () => {
         return;
       }
 
-      // ✅ CORRECT LOGIN
-      if (email === storedEmail && password === storedPassword) {
+      // ✅ LOGIN SUCCESS
+      localStorage.setItem("userSession", "active");
 
-        localStorage.setItem("userSession", "active");
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify(foundUser)
+      );
 
-        // 🔥 notify navbar instantly
-        window.dispatchEvent(new Event("authChange"));
+      // 🔥 notify navbar instantly
+      window.dispatchEvent(new Event("authChange"));
 
-        alert(`Welcome back ${storedName}!`);
+      alert(`Welcome back ${foundUser.name}!`);
 
-        clearInputs();
+      clearInputs();
 
-        const pendingBag = localStorage.getItem("pendingBag");
+      const pendingBag = localStorage.getItem("pendingBag");
 
-        if (pendingBag) {
-          const bagData = JSON.parse(pendingBag);
+      if (pendingBag) {
 
-          localStorage.removeItem("pendingBag");
+        const bagData = JSON.parse(pendingBag);
 
-          navigate("/shop", { state: bagData });
+        localStorage.removeItem("pendingBag");
 
-        } else {
-          navigate("/");
-        }
+        navigate("/shop", { state: bagData });
 
       } else {
-        // ❌ WRONG DETAILS
-        alert("Incorrect email or password!");
 
-        clearInputs();
+        navigate("/");
       }
-
     }
 
     // ================= SIGN UP =================
     else {
 
-      // ❌ ACCOUNT ALREADY EXISTS
-      if (email === storedEmail) {
+      const existingUser = users.find(
+        (user) => user.email === email
+      );
+
+      // ❌ ACCOUNT EXISTS
+      if (existingUser) {
+
         alert("Account already exists. Please login!");
 
         setIsLogin(true);
@@ -148,11 +184,24 @@ const Signin = () => {
         return;
       }
 
-      // ✅ CREATE ACCOUNT
-      localStorage.setItem("userName", name);
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("userPassword", password);
+      // ✅ CREATE USER
+      const newUser = {
+        id: Date.now(),
+        name,
+        email,
+        password,
+      };
+
+      const updatedUsers = [...users, newUser];
+
+      saveUsers(updatedUsers);
+
       localStorage.setItem("userSession", "active");
+
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify(newUser)
+      );
 
       // 🔥 notify navbar instantly
       window.dispatchEvent(new Event("authChange"));

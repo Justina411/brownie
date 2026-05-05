@@ -26,31 +26,18 @@ const Signin = () => {
     setInputCode("");
   };
 
-  // ✅ GET ALL USERS
-  const getUsers = () => {
-    return JSON.parse(localStorage.getItem("users")) || [];
-  };
-
-  // ✅ SAVE USERS
-  const saveUsers = (users) => {
-    localStorage.setItem("users", JSON.stringify(users));
-  };
-
   // ✅ SEND RESET CODE
   const handleSendCode = (e) => {
     e.preventDefault();
 
-    const users = getUsers();
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const foundUser = users.find(
+    const existingUser = users.find(
       (user) => user.email === email
     );
 
-    if (foundUser) {
-
-      const code = Math.floor(
-        1000 + Math.random() * 9000
-      ).toString();
+    if (existingUser) {
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
 
       setGeneratedCode(code);
 
@@ -60,13 +47,9 @@ const Signin = () => {
       setIsForgot(false);
 
     } else {
-
       alert("Email not found. Please sign up first!");
-
       setIsForgot(false);
       setIsLogin(false);
-
-      clearInputs();
     }
   };
 
@@ -75,12 +58,9 @@ const Signin = () => {
     e.preventDefault();
 
     if (inputCode === generatedCode) {
-
       setIsVerifying(false);
       setIsResetting(true);
-
     } else {
-
       alert("Invalid code. Please try again.");
     }
   };
@@ -89,7 +69,7 @@ const Signin = () => {
   const handleSaveNewPassword = (e) => {
     e.preventDefault();
 
-    const users = getUsers();
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
     const updatedUsers = users.map((user) =>
       user.email === email
@@ -97,118 +77,112 @@ const Signin = () => {
         : user
     );
 
-    saveUsers(updatedUsers);
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
 
     alert("Password updated successfully! Please login.");
 
+    clearInputs();
+
     setIsResetting(false);
     setIsLogin(true);
-
-    clearInputs();
   };
 
   // ✅ LOGIN + SIGNUP
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const users = getUsers();
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    // ================= LOGIN =================
     if (isLogin) {
-
-      const foundUser = users.find(
+      // ✅ LOGIN
+      const existingUser = users.find(
         (user) =>
           user.email === email &&
           user.password === password
       );
 
-      // ❌ USER NOT FOUND
-      if (!foundUser) {
+      if (existingUser) {
 
-        alert("Account not found. Please sign up first!");
+        // ✅ STORE SESSION
+        localStorage.setItem("userSession", "active");
 
-        setIsLogin(false);
+        // ✅ STORE CURRENT USER DETAILS
+        localStorage.setItem("userName", existingUser.name);
+        localStorage.setItem("userEmail", existingUser.email);
 
+        // ✅ WELCOME USER WITH STORED NAME
+        alert(`Welcome back ${existingUser.name}!`);
+
+        // ✅ CLEAR INPUTS
         clearInputs();
 
-        return;
-      }
+        // ✅ UPDATE NAVBAR
+        window.dispatchEvent(new Event("authChange"));
 
-      // ✅ LOGIN SUCCESS
-      localStorage.setItem("userSession", "active");
+        const pendingBag = localStorage.getItem("pendingBag");
 
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify(foundUser)
-      );
+        if (pendingBag) {
+          const bagData = JSON.parse(pendingBag);
 
-      // 🔥 notify navbar instantly
-      window.dispatchEvent(new Event("authChange"));
+          localStorage.removeItem("pendingBag");
 
-      alert(`Welcome back ${foundUser.name}!`);
+          navigate("/shop", { state: bagData });
 
-      clearInputs();
-
-      const pendingBag = localStorage.getItem("pendingBag");
-
-      if (pendingBag) {
-
-        const bagData = JSON.parse(pendingBag);
-
-        localStorage.removeItem("pendingBag");
-
-        navigate("/shop", { state: bagData });
+        } else {
+          navigate("/");
+        }
 
       } else {
+        // ❌ USER NOT FOUND
+        const emailExists = users.find(
+          (user) => user.email === email
+        );
 
-        navigate("/");
+        if (!emailExists) {
+          alert("You have not signed up yet. Please create an account first!");
+          setIsLogin(false);
+        } else {
+          alert("Incorrect password.");
+        }
       }
-    }
 
-    // ================= SIGN UP =================
-    else {
-
+    } else {
+      // ✅ SIGN UP
       const existingUser = users.find(
         (user) => user.email === email
       );
 
-      // ❌ ACCOUNT EXISTS
       if (existingUser) {
-
         alert("Account already exists. Please login!");
-
         setIsLogin(true);
-
-        clearInputs();
-
         return;
       }
 
-      // ✅ CREATE USER
+      // ✅ CREATE NEW USER
       const newUser = {
-        id: Date.now(),
         name,
         email,
-        password,
+        password
       };
 
+      // ✅ SAVE USER
       const updatedUsers = [...users, newUser];
 
-      saveUsers(updatedUsers);
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
 
+      // ✅ SAVE SESSION
       localStorage.setItem("userSession", "active");
+      localStorage.setItem("userName", name);
+      localStorage.setItem("userEmail", email);
 
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify(newUser)
-      );
-
-      // 🔥 notify navbar instantly
-      window.dispatchEvent(new Event("authChange"));
-
+      // ✅ WELCOME NEW USER
       alert(`Welcome ${name}! Account created successfully.`);
 
+      // ✅ CLEAR INPUTS
       clearInputs();
+
+      // ✅ UPDATE NAVBAR
+      window.dispatchEvent(new Event("authChange"));
 
       navigate("/");
     }
@@ -219,7 +193,6 @@ const Signin = () => {
 
       {/* LEFT SIDE */}
       <div className="flex-1 bg-[#c69a7c] flex flex-col justify-center items-center relative overflow-hidden">
-
         <h1 className="absolute top-10 text-4xl font-black text-[#2f1f1a] uppercase tracking-tighter z-10">
           Brownie
         </h1>
@@ -260,18 +233,15 @@ const Signin = () => {
         >
 
           {/* FULL NAME */}
-          {!isLogin &&
-            !isForgot &&
-            !isVerifying &&
-            !isResetting && (
-              <input
-                className="w-full p-4 bg-zinc-900 rounded-xl"
-                placeholder="Full Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            )}
+          {!isLogin && !isForgot && !isVerifying && !isResetting && (
+            <input
+              className="w-full p-4 bg-zinc-900 rounded-xl"
+              placeholder="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          )}
 
           {/* EMAIL */}
           {!isVerifying && !isResetting && (
@@ -309,37 +279,29 @@ const Signin = () => {
           )}
 
           {/* PASSWORD */}
-          {!isForgot &&
-            !isVerifying &&
-            !isResetting && (
-              <input
-                className="w-full p-4 bg-zinc-900 rounded-xl"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            )}
+          {!isForgot && !isVerifying && !isResetting && (
+            <input
+              className="w-full p-4 bg-zinc-900 rounded-xl"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          )}
 
           {/* FORGOT PASSWORD */}
-          {isLogin &&
-            !isForgot &&
-            !isVerifying &&
-            !isResetting && (
-              <div className="text-right">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsForgot(true);
-                    clearInputs();
-                  }}
-                  className="text-xs text-[#c69a7c]"
-                >
-                  Forgot Password?
-                </button>
-              </div>
-            )}
+          {isLogin && !isForgot && !isVerifying && !isResetting && (
+            <div className="text-right">
+              <button
+                type="button"
+                onClick={() => setIsForgot(true)}
+                className="text-xs text-[#c69a7c]"
+              >
+                Forgot Password?
+              </button>
+            </div>
+          )}
 
           {/* BUTTON */}
           <button className="w-full bg-[#c69a7c] text-black font-bold py-4 rounded-xl">
@@ -373,6 +335,7 @@ const Signin = () => {
             ? "Need an account? Sign Up"
             : "Have an account? Log In"}
         </button>
+
       </div>
     </div>
   );

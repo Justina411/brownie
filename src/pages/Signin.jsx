@@ -17,7 +17,6 @@ const Signin = () => {
   const [inputCode, setInputCode] = useState("");
   const [generatedCode, setGeneratedCode] = useState("");
 
-  // ✅ CLEAR INPUTS
   const clearInputs = () => {
     setName("");
     setEmail("");
@@ -26,34 +25,29 @@ const Signin = () => {
     setInputCode("");
   };
 
-  // ✅ SEND RESET CODE
   const handleSendCode = (e) => {
     e.preventDefault();
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const existingUser = users.find(
-      (user) => user.email === email
-    );
+    const user = users.find(u => u.email === email);
 
-    if (existingUser) {
-      const code = Math.floor(1000 + Math.random() * 9000).toString();
-
-      setGeneratedCode(code);
-
-      alert(`Your verification code is: ${code}`);
-
-      setIsVerifying(true);
-      setIsForgot(false);
-
-    } else {
+    if (!user) {
       alert("Email not found. Please sign up first!");
       setIsForgot(false);
       setIsLogin(false);
+      return;
     }
+
+    const code = Math.floor(1000 + Math.random() * 9000).toString();
+    setGeneratedCode(code);
+
+    alert(`Your verification code is: ${code}`);
+
+    setIsVerifying(true);
+    setIsForgot(false);
   };
 
-  // ✅ VERIFY CODE
   const handleVerifyCode = (e) => {
     e.preventDefault();
 
@@ -61,128 +55,83 @@ const Signin = () => {
       setIsVerifying(false);
       setIsResetting(true);
     } else {
-      alert("Invalid code. Please try again.");
+      alert("Invalid code");
     }
   };
 
-  // ✅ SAVE NEW PASSWORD
   const handleSaveNewPassword = (e) => {
     e.preventDefault();
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const updatedUsers = users.map((user) =>
-      user.email === email
-        ? { ...user, password: newPassword }
-        : user
+    const updated = users.map(u =>
+      u.email === email ? { ...u, password: newPassword } : u
     );
 
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    localStorage.setItem("users", JSON.stringify(updated));
 
-    alert("Password updated successfully! Please login.");
+    alert("Password updated!");
 
     clearInputs();
-
     setIsResetting(false);
     setIsLogin(true);
   };
 
-  // ✅ LOGIN + SIGNUP
+  const loginUser = (user) => {
+    localStorage.setItem("userSession", "active");
+    localStorage.setItem("userName", user.name);
+    localStorage.setItem("userEmail", user.email);
+
+    window.dispatchEvent(new Event("authChange"));
+
+    clearInputs();
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
     if (isLogin) {
-      // ✅ LOGIN
-      const existingUser = users.find(
-        (user) =>
-          user.email === email &&
-          user.password === password
+      const user = users.find(
+        u => u.email === email && u.password === password
       );
 
-      if (existingUser) {
-
-        // ✅ STORE SESSION
-        localStorage.setItem("userSession", "active");
-
-        // ✅ STORE CURRENT USER DETAILS
-        localStorage.setItem("userName", existingUser.name);
-        localStorage.setItem("userEmail", existingUser.email);
-
-        // ✅ WELCOME USER WITH STORED NAME
-        alert(`Welcome back ${existingUser.name}!`);
-
-        // ✅ CLEAR INPUTS
-        clearInputs();
-
-        // ✅ UPDATE NAVBAR
-        window.dispatchEvent(new Event("authChange"));
-
-        const pendingBag = localStorage.getItem("pendingBag");
-
-        if (pendingBag) {
-          const bagData = JSON.parse(pendingBag);
-
-          localStorage.removeItem("pendingBag");
-
-          navigate("/shop", { state: bagData });
-
-        } else {
-          navigate("/");
-        }
-
-      } else {
-        // ❌ USER NOT FOUND
-        const emailExists = users.find(
-          (user) => user.email === email
-        );
+      if (!user) {
+        const emailExists = users.find(u => u.email === email);
 
         if (!emailExists) {
-          alert("You have not signed up yet. Please create an account first!");
+          alert("You need to sign up first");
           setIsLogin(false);
         } else {
-          alert("Incorrect password.");
+          alert("Wrong password");
         }
+        return;
       }
 
-    } else {
-      // ✅ SIGN UP
-      const existingUser = users.find(
-        (user) => user.email === email
-      );
+      alert(`Welcome back ${user.name}`);
 
-      if (existingUser) {
-        alert("Account already exists. Please login!");
+      loginUser(user);
+
+      navigate("/");
+    } else {
+      const exists = users.find(u => u.email === email);
+
+      if (exists) {
+        alert("Account already exists");
         setIsLogin(true);
         return;
       }
 
-      // ✅ CREATE NEW USER
-      const newUser = {
-        name,
-        email,
-        password
-      };
+      const newUser = { name, email, password };
 
-      // ✅ SAVE USER
       const updatedUsers = [...users, newUser];
 
       localStorage.setItem("users", JSON.stringify(updatedUsers));
 
-      // ✅ SAVE SESSION
-      localStorage.setItem("userSession", "active");
-      localStorage.setItem("userName", name);
-      localStorage.setItem("userEmail", email);
+      alert(`Welcome ${name}`);
 
-      // ✅ WELCOME NEW USER
-      alert(`Welcome ${name}! Account created successfully.`);
-
-      // ✅ CLEAR INPUTS
-      clearInputs();
-
-      // ✅ UPDATE NAVBAR
-      window.dispatchEvent(new Event("authChange"));
+      loginUser(newUser);
 
       navigate("/");
     }
@@ -191,149 +140,59 @@ const Signin = () => {
   return (
     <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#1a0f0d]">
 
-      {/* LEFT SIDE */}
-      <div className="flex-1 bg-[#c69a7c] flex flex-col justify-center items-center relative overflow-hidden">
-        <h1 className="absolute top-10 text-4xl font-black text-[#2f1f1a] uppercase tracking-tighter z-10">
-          Brownie
-        </h1>
-
-        <img
-          src={bag}
-          alt="Bag"
-          className="h-full w-full object-contain object-right mix-blend-multiply translate-x-5"
-        />
+      <div className="flex-1 bg-[#c69a7c] flex justify-center items-center">
+        <img src={bag} alt="" className="w-full object-contain" />
       </div>
 
-      {/* RIGHT SIDE */}
-      <div className="flex-1 flex flex-col justify-center items-center p-10 text-white">
+      <div className="flex-1 flex flex-col justify-center items-center text-white p-10">
 
-        <h2 className="text-3xl font-bold mb-6 uppercase">
-          {isVerifying
-            ? "Enter Code"
-            : isResetting
-            ? "New Password"
-            : isForgot
-            ? "Forgot Password"
-            : isLogin
-            ? "Log In"
-            : "Sign Up"}
+        <h2 className="text-3xl font-bold mb-6">
+          {isLogin ? "Login" : "Sign Up"}
         </h2>
 
-        <form
-          onSubmit={
-            isVerifying
-              ? handleVerifyCode
-              : isResetting
-              ? handleSaveNewPassword
-              : isForgot
-              ? handleSendCode
-              : handleSubmit
-          }
-          className="w-full max-w-md space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
 
-          {/* FULL NAME */}
-          {!isLogin && !isForgot && !isVerifying && !isResetting && (
+          {!isLogin && (
             <input
-              className="w-full p-4 bg-zinc-900 rounded-xl"
-              placeholder="Full Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          )}
-
-          {/* EMAIL */}
-          {!isVerifying && !isResetting && (
-            <input
+              onChange={e => setName(e.target.value)}
+              placeholder="Name"
               className="w-full p-4 bg-zinc-900 rounded-xl"
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
             />
           )}
 
-          {/* VERIFY CODE */}
-          {isVerifying && (
-            <input
-              className="w-full p-4 bg-zinc-900 rounded-xl text-center tracking-[1em]"
-              placeholder="0000"
-              value={inputCode}
-              onChange={(e) => setInputCode(e.target.value)}
-              required
-            />
-          )}
+          <input
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="Email"
+            className="w-full p-4 bg-zinc-900 rounded-xl"
+            required
+          />
 
-          {/* NEW PASSWORD */}
-          {isResetting && (
-            <input
-              className="w-full p-4 bg-zinc-900 rounded-xl"
-              type="password"
-              placeholder="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-          )}
+          <input
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="Password"
+            type="password"
+            className="w-full p-4 bg-zinc-900 rounded-xl"
+            required
+          />
 
-          {/* PASSWORD */}
-          {!isForgot && !isVerifying && !isResetting && (
-            <input
-              className="w-full p-4 bg-zinc-900 rounded-xl"
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          )}
-
-          {/* FORGOT PASSWORD */}
-          {isLogin && !isForgot && !isVerifying && !isResetting && (
-            <div className="text-right">
-              <button
-                type="button"
-                onClick={() => setIsForgot(true)}
-                className="text-xs text-[#c69a7c]"
-              >
-                Forgot Password?
-              </button>
-            </div>
-          )}
-
-          {/* BUTTON */}
-          <button className="w-full bg-[#c69a7c] text-black font-bold py-4 rounded-xl">
-            {isVerifying
-              ? "Verify Code"
-              : isResetting
-              ? "Update Password"
-              : isForgot
-              ? "Send Reset Code"
-              : isLogin
-              ? "Log In"
-              : "Sign Up"}
+          <button className="w-full bg-[#c69a7c] text-black py-4 rounded-xl font-bold">
+            {isLogin ? "Login" : "Sign Up"}
           </button>
+
         </form>
 
-        {/* TOGGLE */}
         <button
           onClick={() => {
             setIsLogin(!isLogin);
-            setIsForgot(false);
-            setIsVerifying(false);
-            setIsResetting(false);
-
             clearInputs();
           }}
-          className="mt-6 text-[#c69a7c] text-xs underline"
+          className="mt-6 text-[#c69a7c] underline text-sm"
         >
-          {isForgot || isVerifying || isResetting
-            ? "Back to Login"
-            : isLogin
-            ? "Need an account? Sign Up"
-            : "Have an account? Log In"}
+          {isLogin ? "Create account" : "Have account? Login"}
         </button>
 
       </div>

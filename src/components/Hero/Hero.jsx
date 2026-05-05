@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; 
-import background from "../../public/background.jpg";
+import background from "../../public/plain.jpg";
 import shipping from "../../public/shipping.png";
 import exclusive from "../../public/Exclusive.png";
 import packaging from "../../public/packaging.png"; 
